@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include <iostream>
+#include <map>
+#include "Card.h"
 
 using namespace std;
 
@@ -15,8 +17,10 @@ class CardDatabase {
 public:
 	CardDatabase();
 	CardDatabase(string dbFName);
+	~CardDatabase();
 
 	bool createCardDatabaseFromFile();
+	void processCard(string APIText);
 	/* Other potential APIs
 	Specific Class Return
 	Specific Card Return
@@ -24,4 +28,5 @@ public:
 
 private:
 	string _dbFileName;
+	map<string, Card>* internalDatabase;
 };
