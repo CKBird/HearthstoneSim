@@ -16,7 +16,7 @@ class Card {
 public:
 	Card(); //Prevent compiler from making
 	Card(card_type cT, class_name cN);
-	
+
 	card_type getType() { return _cType;}
 	int getCost() { return _cost; }
 	string getEffect() { return _effect; }
@@ -43,6 +43,9 @@ protected:
 class Minion : public Card {
 public:
 	Minion(class_name cN, int cost, int atk, int health, string name, string effect = "");
+	
+	void printInfo();
+	
 	int getHealth() { return _health; }
 	int getAtk() { return _atk; }
 
@@ -56,6 +59,8 @@ private:
 class Spell : public Card {
 public:
 	Spell(class_name cN, int cost, string name, string effect = "");
+
+	void printInfo();
 private:
 	bool assertType() { if (_cType != card_type::spell) return false; }
 };
@@ -63,6 +68,8 @@ private:
 class Weapon : public Card {
 public:
 	Weapon(class_name cN, int cost, int atk, int dura, string name, string effect = "");
+
+	void printInfo();
 private:
 	bool assertType() { if (_cType != card_type::weapon) return false; }
 	int _atk, _dura;
@@ -71,6 +78,7 @@ private:
 class Hero : public Card {
 public:
 	Hero(class_name cN, int cost, int armor, string name, string effect = "");
+	void printInfo();
 private:
 	bool assertType() { if (_cType != card_type::hero) return false; }
 	int _armor;
