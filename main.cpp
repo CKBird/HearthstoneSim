@@ -1,21 +1,22 @@
 #include "Card.h"
+#include "CardDatabase.h"
 #include <iostream>
 #include <string>
 
 using namespace std;
 
 int main() {
-	cout << "Creating generic 'Card'..." << endl;
-	Card hMinion(card_type::minion, class_name::hunter);
+	//Card hMinion(card_type::minion, class_name::hunter);
 
-	cout << "The card type is: " << hMinion.getType() << " and the class is: " << hMinion.getClassName() << endl;
+	//Minion hMinion2(class_name::hunter, 5, 3, 2, "Starving Buzzard", "when you summon a beast, draw a card.");
+	//hMinion2.printInfo();
 
-	cout << "Creating Minion Card ..." << endl;
+	cout << "Creating card database from file hsdataoutput.txt" << endl;
+	string fName("hsdataoutput.txt");
+	CardDatabase* cd = new CardDatabase(fName);
+	cd->createCardDatabaseFromFile();
 
-	Minion hMinion2(class_name::hunter, 5, 3, 2, "Starving Buzzard", "when you summon a beast, draw a card.");
-	hMinion2.printInfo();
-
-
+	cout << "Finished..." << endl;
 
 	return 1;
 }
