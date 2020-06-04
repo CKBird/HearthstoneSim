@@ -10,6 +10,10 @@ Spell::Spell(class_name cN, int cost, string name, string effect)
 }
 
 void Spell::printInfo() {
-
+	cout << "Name: " << _name << endl
+		<< "Type: " << _cType << endl
+		<< "Class: " << _cName << endl
+		<< "Cost: " << _cost << endl
+		<< "Effect: " << _effect << endl;
 	return;
 }

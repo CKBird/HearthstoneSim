@@ -12,6 +12,11 @@ Weapon::Weapon(class_name cN, int cost, int atk, int dura, string name, string e
 }
 
 void Weapon::printInfo() {
-
+	cout << "Name: " << _name << endl
+		<< "Type: " << _cType << endl
+		<< "Class: " << _cName << endl
+		<< "Attack: " << _atk << endl
+		<< "Durability: " << _dura << endl
+		<< "Effect: " << _effect << endl;
 	return;
 }

@@ -12,6 +12,12 @@ Minion::Minion(class_name cN, int cost, int atk, int health, string name, string
 }
 
 void Minion::printInfo() {
-
+	cout << "Name: " << _name << endl
+		<< "Type: " << _cType << endl
+		<< "Class: " << _cName << endl
+		<< "Cost: " << _cost << endl
+		<< "Attack: " << _atk << endl
+		<< "Health: " << _health << endl
+		<< "Effect: " << _effect << endl;
 	return;
 }

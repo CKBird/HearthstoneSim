@@ -11,6 +11,10 @@ Hero::Hero(class_name cN, int cost, int armor, string name, string effect)
 }
 
 void Hero::printInfo() {
-
+	cout << "Name: " << _name << endl
+		<< "Type: " << _cType << endl
+		<< "Class: " << _cName << endl
+		<< "Armor: " << _armor << endl
+		<< "Effect: " << _effect << endl;
 	return;
 }
