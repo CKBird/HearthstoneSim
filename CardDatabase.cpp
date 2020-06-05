@@ -180,7 +180,6 @@ void CardDatabase::processCard(string APIText) {
 		}
 		else if (type == "Hero") {
 			//create hero card
-			//Hero::Hero(class_name cN, int cost, int armor, string name, string effect)
 			tempCard = new Hero(cName, atoi(cost.c_str()), atoi(armor.c_str()), name, text);
 			numHero++;
 		}

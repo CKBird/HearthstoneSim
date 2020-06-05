@@ -39,6 +39,7 @@ protected:
 	int _cost;
 	string _effect, _name;
 	class_name _cName;
+	//Rarity
 };
 
 
@@ -51,8 +52,8 @@ public:
 	int getHealth() { return _health; }
 	int getAtk() { return _atk; }
 
-	bool setHealth(int health) { _health = health; }
-	bool setAtk(int atk) { _atk = atk; }
+	void setHealth(int health) { _health = health; }
+	void setAtk(int atk) { _atk = atk; }
 private:
 	bool assertType() { if (_cType != card_type::minion) return false; }
 	int _atk, _health;
