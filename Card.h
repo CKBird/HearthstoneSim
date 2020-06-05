@@ -8,7 +8,7 @@ using namespace std;
 enum class card_type { none, minion, spell, weapon, hero };
 enum class class_name {
 	none, demon_hunter, druid, hunter, mage, paladin,
-	priest, shaman, warlock, warrior, neutral
+	priest, rogue, shaman, warlock, warrior, neutral
 };
 
 //Base class for Minion, Spell, Hero classes
@@ -16,6 +16,8 @@ class Card {
 public:
 	Card(); //Prevent compiler from making
 	Card(card_type cT, class_name cN);
+
+	virtual void printInfo();
 
 	card_type getType() { return _cType;}
 	int getCost() { return _cost; }
@@ -111,6 +113,7 @@ std::ostream& operator<<(std::ostream& out, const class_name& value) {
 		PROCESS_VAL(class_name::mage);
 		PROCESS_VAL(class_name::paladin);
 		PROCESS_VAL(class_name::priest);
+		PROCESS_VAL(class_name::rogue);
 		PROCESS_VAL(class_name::shaman);
 		PROCESS_VAL(class_name::warlock);
 		PROCESS_VAL(class_name::warrior);

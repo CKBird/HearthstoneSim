@@ -15,3 +15,7 @@ Card::Card(card_type cT, class_name cN) {
 	_effect = "";
 	_name = "";
 }
+
+void Card::printInfo()
+{
+}

@@ -21,12 +21,19 @@ public:
 
 	bool createCardDatabaseFromFile();
 	void processCard(string APIText);
+	inline Card* getCard(string name) { return internalDatabase->at(name); }
 	/* Other potential APIs
 	Specific Class Return
 	Specific Card Return
 	Specific Cost Return etc */
 
+	void printInfo();
+
+	string& removeQuotes(string &str);
+	string& removeColon(string& str);
+
 private:
 	string _dbFileName;
-	map<string, Card>* internalDatabase;
+	map<string, Card*>* internalDatabase;
+	int numMinion, numSpell, numWeapon, numHero;
 };

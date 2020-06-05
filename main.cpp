@@ -18,5 +18,11 @@ int main() {
 
 	cout << "Finished..." << endl;
 
+	cd->printInfo();
+
+	cout << "Attempting to find card Battlefiend..." << endl;
+
+	cd->getCard("Battlefiend")->printInfo();
+
 	return 1;
 }
