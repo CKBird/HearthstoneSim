@@ -20,9 +20,9 @@ int main() {
 
 	cd->printInfo();
 
-	cout << "Attempting to find card Temple Enforcer..." << endl;
+	//cout << "Attempting to find card Temple Enforcer..." << endl;
 
-	cd->getCard("Temple Enforcer")->printInfo();
+	//cd->getCard("Temple Enforcer")->printInfo();
 
 	return 1;
 }

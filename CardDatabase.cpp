@@ -14,12 +14,14 @@ CardDatabase::CardDatabase() {
 	_dbFileName = "";
 	internalDatabase = new map<string, Card*>;
 	numMinion = numSpell = numWeapon = numHero = 0;
+	database = new map < class_name, map	<card_type, multimap	<int, Card*>	>	>;
 }
 
 CardDatabase::CardDatabase(string dbFName) {
 	_dbFileName = dbFName;
 	internalDatabase = new map<string, Card*>;
 	numMinion = numSpell = numWeapon = numHero = 0;
+	database = new map < class_name, map	<card_type, multimap	<int, Card*>	>	>;
 }
 
 CardDatabase::~CardDatabase() {
@@ -39,10 +41,8 @@ bool CardDatabase::createCardDatabaseFromFile() {
 	if (dbFile.is_open()) {
 		while (getline(dbFile, readLine)) {
 			if (readLine.find("\"collectible\":true") == string::npos)
-				continue;
-			if (readLine.find("\"type\":\"Hero\"") != string::npos)
-				continue;
-			//cout << "readLine: " << readLine << endl;
+				continue; //Don't handle tokens yet
+			//if (readLine.find("\"type\":\"Hero\"") != string::npos) {} Allow heroes through, sort them by cost later
 			dboFile << readLine << endl;
 			/* Now process the 'line' which contains the entire card*/
 			this->processCard(readLine);
@@ -180,6 +180,8 @@ void CardDatabase::processCard(string APIText) {
 		}
 		else if (type == "Hero") {
 			//create hero card
+			//If there's no cost, hero isn't truly a 'card' and skip
+			if (cost == "") return;
 			tempCard = new Hero(cName, atoi(cost.c_str()), atoi(armor.c_str()), name, text);
 			numHero++;
 		}
@@ -187,10 +189,58 @@ void CardDatabase::processCard(string APIText) {
 			cout << "Incorrect type found: " << type << endl;
 			return;
 		}
-		internalDatabase->insert(make_pair(name, tempCard));
+		if (!insertCardToDatabase(tempCard)) {
+			cout << "Error inserting card..." << endl;
+		}
 		//cout << "TempCard is: " << endl;
 		//tempCard->printInfo();
 	}
+}
+
+bool CardDatabase::insertCardToDatabase(Card* crd) {
+	//Initially, simply insert card into the card map
+	internalDatabase->insert(make_pair(crd->getName(), crd));
+	return true;
+
+	//Extend this solution to allow for faster search and better sorting
+	//Instead of having all cards in one container, have multiple containers
+	//Each container should sort the cards by some important value
+	//If we assume by class and then by cardtype...
+	//Create a map of multimaps
+	//Each map will be a different class (11 total)
+	//Each map will contain a multimap for each card type
+	//Ex: Map: Demon Hunter
+	//DemonHunterMap: Mininons, Spells, Weapons, Heroes
+	//Now that we have a map of multimaps, we want each 'key' in the sub-multimap to be as medium-small as possible
+	//Fast to find keys, slow to search through all the cards of same key
+	//DemonHunterMap:Minions:: insert cards by minimal-key
+	//Minions have cost, effect, name, attack and health
+	//If we do key based on name(or effect), every key will only have 1 card...
+	//But if we want to find all demon hunter cards with cost 3, we have to search _every_ object
+	//This only leaves attack, health, or cost. Since we can only have 1 key and attack/health are implicitly linked as 'stats'
+	//We should key by cost
+
+	//DemonHunterMap::MultiMapMinions::Key:Cost, Value: Card
+	//To find all 'minions' just go to each classes map, find the multimap of minions and print all elements
+	//To find all '2 cost cards' go to each classes map, find all cards that have key of 0 in each of the 4 cardtype multimaps, and print
+	//To find all '3 attack demon hunter cards' go to demon hunter map, find minion multimap, and (unfortunately) search every minion for 3 attack
+
+	//As with all databases, we need to decide which operations are most common and which are least common
+	//For future, we plan on implementing a 'collection view' which sorts by class, then by cost (disregard type)
+	//But we know that API accessors and devs will want to sort by type before cost
+	//Attack, Health, Armor, Durability etc are very niche searches, so we decide for them to take the efficiency hit
+
+	/*
+		Maps:			Demon Hunter, ...
+						/		|		|		\
+		Multimaps: Minion	Spell		Weapon		Hero
+		Multimap::Key = Cost
+					
+					DemonHunter::Minion
+					/		|		|		\ ...
+				0-cost	1-cost		2-cost	3-cost ...
+	*/
+
 }
 
 void CardDatabase::printInfo() {
