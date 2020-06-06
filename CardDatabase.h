@@ -19,23 +19,27 @@ public:
 	CardDatabase(string dbFName);
 	~CardDatabase();
 
+	typedef multimap<int, Card*> innerMap;
+	typedef map<card_type, innerMap> middleMap;
+	typedef map<class_name, middleMap> db;
+
 	bool createCardDatabaseFromFile();
 	void processCard(string APIText);
+	bool initializeDatabase();
 	bool insertCardToDatabase(Card* crd);
 
-
-
-	inline Card* getCard(string name) { return internalDatabase->at(name); }
+	//inline Card* getCard(string name) { return internalDatabase->at(name); }
 
 
 	void printInfo();
+	void outputCards(class_name cN = class_name::none, card_type cT = card_type::none, int cost = -1);
 
 	string& removeQuotes(string &str);
 	string& removeColon(string& str);
 
 private:
 	string _dbFileName;
-	map<string, Card*>* internalDatabase;
+	//map<string, Card*>* internalDatabase;
 	int numMinion, numSpell, numWeapon, numHero;
-	map < class_name,	map	<card_type, multimap	<int, Card*>	>	> *database;
+	db* database;
 };

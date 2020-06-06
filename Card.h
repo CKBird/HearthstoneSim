@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <iostream>
+#include <array>
 
 using namespace std;
 
@@ -10,6 +11,12 @@ enum class class_name {
 	none, demon_hunter, druid, hunter, mage, paladin,
 	priest, rogue, shaman, warlock, warrior, neutral
 };
+const array<card_type, 5> all_types = { card_type::none, card_type::minion, card_type::spell,
+	card_type::weapon, card_type::hero };
+const array<class_name, 12> all_classes = {class_name::none, class_name::demon_hunter, class_name::druid,
+	class_name::hunter, class_name::mage, class_name::paladin, class_name::priest,
+	class_name::rogue, class_name::shaman, class_name::warlock, class_name::warrior,
+	class_name::neutral};
 
 //Base class for Minion, Spell, Hero classes
 class Card {

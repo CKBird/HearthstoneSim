@@ -19,10 +19,15 @@ int main() {
 	cout << "Finished..." << endl;
 
 	cd->printInfo();
+	class_name inpClass = class_name::mage;
+	card_type inpType = card_type::minion;
+	int inpCost = 4;
 
-	//cout << "Attempting to find card Temple Enforcer..." << endl;
+	cout << "Printing all cards of class: " << inpClass
+		<< "of type: " << inpType << " and cost: " << inpCost << endl;
 
-	//cd->getCard("Temple Enforcer")->printInfo();
+	cd->outputCards(inpClass, inpType, inpCost);
+	
 
 	return 1;
 }

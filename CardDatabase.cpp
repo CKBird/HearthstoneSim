@@ -12,20 +12,21 @@ using namespace std;
 
 CardDatabase::CardDatabase() {
 	_dbFileName = "";
-	internalDatabase = new map<string, Card*>;
+	//internalDatabase = new map<string, Card*>;
 	numMinion = numSpell = numWeapon = numHero = 0;
-	database = new map < class_name, map	<card_type, multimap	<int, Card*>	>	>;
+	database = new db;
 }
 
 CardDatabase::CardDatabase(string dbFName) {
 	_dbFileName = dbFName;
-	internalDatabase = new map<string, Card*>;
+	//internalDatabase = new map<string, Card*>;
 	numMinion = numSpell = numWeapon = numHero = 0;
-	database = new map < class_name, map	<card_type, multimap	<int, Card*>	>	>;
+	database = new db;
 }
 
 CardDatabase::~CardDatabase() {
-	delete internalDatabase;
+	//delete internalDatabase;
+	delete database;
 }
 
 //This will use stored _dbFileName to populate all appropriate cards
@@ -36,6 +37,11 @@ bool CardDatabase::createCardDatabaseFromFile() {
 		return false;
 	}
 	
+	//Before we start adding to database, must initialize it
+	if (!initializeDatabase()) {
+		return false;
+	}
+
 	string readLine;
 	ifstream dbFile(_dbFileName);
 	if (dbFile.is_open()) {
@@ -197,10 +203,30 @@ void CardDatabase::processCard(string APIText) {
 	}
 }
 
+bool CardDatabase::initializeDatabase()
+{
+	//set up the map < class_name,	map*<card_type, multimap*<int, Card*>	>	>
+	//create empty <class_name, map*<...>> for each class
+	//Create empty <card_type, multimap*<...>> for each card type for each class
+	//Don't need to populate the multimaps, they will be populated once we start adding cards to it
+
+	for (class_name className : all_classes) { //Creating the empty class_name, map*<...>
+		//map* tempMap = new map<card_type, multimap<int, Card*>>;
+		middleMap mMap;
+		database->insert(make_pair(className, mMap));
+		for (card_type cardType : all_types) { //Create the empty multimap<>
+			//multimap* tempMMap = new multimap<int, Card*>;
+			innerMap iMap;
+			database->at(className).insert(make_pair(cardType, iMap));
+		}
+	}
+	return true;
+}
+
 bool CardDatabase::insertCardToDatabase(Card* crd) {
 	//Initially, simply insert card into the card map
-	internalDatabase->insert(make_pair(crd->getName(), crd));
-	return true;
+	//internalDatabase->insert(make_pair(crd->getName(), crd));
+	//return true;
 
 	//Extend this solution to allow for faster search and better sorting
 	//Instead of having all cards in one container, have multiple containers
@@ -235,20 +261,63 @@ bool CardDatabase::insertCardToDatabase(Card* crd) {
 						/		|		|		\
 		Multimaps: Minion	Spell		Weapon		Hero
 		Multimap::Key = Cost
-					
+
 					DemonHunter::Minion
 					/		|		|		\ ...
 				0-cost	1-cost		2-cost	3-cost ...
 	*/
 
+	//To implement, we have a card with all relevant data, 
+	//format the pair for the deepest multimap (cost, card)
+	//Then format the pair for card type map (card_type, multimap)
+	//Then finally insert into the class_name,map(multimap)) class_name map
+
+	pair<int, Card*> p1 = make_pair(crd->getCost(), crd);
+	database->at(crd->getClassName()).at(crd->getType()).insert(p1);
+	return true;
 }
 
 void CardDatabase::printInfo() {
-	cout << "Number of Cards in Database: " << internalDatabase->size() << endl
+	cout << "Number of Classes in Database: " << database->size() << endl
+		//<< "Number of Types in Class Demon Hunter: " << database->at(class_name::demon_hunter).size() << endl
+		//<< "Number of Druid Minions: " << database->at(class_name::druid).at(card_type::minion).size() << endl
+		//<< "Number of Rogue Spells that cost 0: " << database->at(class_name::rogue).at(card_type::spell).count(0) << endl
 		<< "Number of Minions: " << numMinion << endl
 		<< "Number of Spells: " << numSpell << endl
 		<< "Number of Weapons: " << numWeapon << endl
 		<< "Number of Heroes: " << numHero << endl;
+}
+
+void CardDatabase::outputCards(class_name cN, card_type cT, int cost) {
+	int foundCount = 0;
+	if (cN == class_name::none && cT == card_type::none) { //Default to none means print all
+		for (class_name className : all_classes) {
+			for (card_type cardType : all_types) {
+
+			}
+		}
+	
+	}
+	else if (cN == class_name::none) {
+		for (class_name className : all_classes) {
+
+		}
+	}
+	else if (cT == card_type::none) {
+		for (card_type cardType : all_types) {
+
+		}
+	}
+	else {
+		cout << "Printing out all cards of class: " << cN << "of type " << cT << endl;
+		for (auto it = database->at(cN).at(cT).begin(); it != database->at(cN).at(cT).end(); ++it) {
+			if ((*it).first == cost) {
+				cout << "Cost: " << (*it).first << " - Name: " << (*it).second->getName() << endl;
+				foundCount++;
+			}
+		}
+	}
+	cout << foundCount << " cards matched your search!" << endl;
 }
 
 string& CardDatabase::removeQuotes(string &str) {
